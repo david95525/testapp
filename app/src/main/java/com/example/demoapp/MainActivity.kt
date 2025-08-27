@@ -1,5 +1,7 @@
 package com.example.demoapp
 
+import android.widget.ImageView
+import android.widget.TextView
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
@@ -12,6 +14,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        val imageView = findViewById<ImageView>(R.id.imageView)
+        val resultText = findViewById<TextView>(R.id.resultText)
         // 建立 SDK
         val sdk = ObjectDetectionSDK(this)
 
@@ -23,6 +27,12 @@ class MainActivity : AppCompatActivity() {
             val results = sdk.detectObjects(bitmap)
 
             runOnUiThread {
+                val sb = StringBuilder()
+                results.forEach {
+                    sb.append("Class: ${it.clazz}, Score: ${"%.2f".format(it.detectionScore)}, W:${it.width}, H:${it.height}\n")
+                    Log.d("Detection", sb.toString())
+                }
+                resultText.text = sb.toString()
                 results.forEach {
                     Log.d("Detection", "Class: ${it.clazz}, Score: ${it.detectionScore}, W:${it.width}, H:${it.height}")
                 }
